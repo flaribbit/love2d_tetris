@@ -5,15 +5,22 @@ function love.load()
     Field:Init()
     Next:Init()
     Block:Load(Next:Pop())
-    for i=1,40 do
-        for j=1,10 do
-            Field[i][j]=(i+j)%2
-        end
-    end
 end
 
 function love.update(dt)
     Control:Update()
+    if Control:IsPress("left") then
+        Block.j=Block.j-1
+    end
+    if Control:IsPress("right") then
+        Block.j=Block.j+1
+    end
+    if Control:IsPress("up") then
+        Block.i=Block.i-1
+    end
+    if Control:IsPress("down") then
+        Block.i=Block.i+1
+    end
     if Control:IsPress("rotl") then
         Block:RotateL()
     end
@@ -27,7 +34,7 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-    love.graphics.print("hello",0,0)
+    love.graphics.print(tostring(Field:Collide(Block,Block.i,Block.j)),0,0)
     Field:Draw()
     Block:Draw()
 end

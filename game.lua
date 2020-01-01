@@ -47,6 +47,17 @@ function Field:Draw()
     end
 end
 
+function Field:Collide(block,bi,bj)
+    for _=1,#block.data do
+        local p=block.data[_]
+        local i,j=17-bi+p[1],bj+p[2]
+        if i<1 or j<1 or j>10 or self[i][j]>0 then
+            return true
+        end
+    end
+    return false
+end
+
 function Next:Init()
     for _=1,7 do self[_]=_ end
     for _=1,6 do
@@ -100,7 +111,7 @@ function Block:Draw()
     color(1,0,0)
     for i=1,#self.data do
         local p=self.data[i]
-        rect("fill",x0+(p[2]-1)*20,y0+(p[1]-1)*20,20,20)
+        rect("fill",x0+(self.j+p[2]-1)*20,y0+(self.i+p[1]-2)*20,20,20)
     end
 end
 
