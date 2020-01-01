@@ -3,6 +3,7 @@ local rect=love.graphics.rectangle
 local color=love.graphics.setColor
 
 local blockdata=require "blockdata"
+local Bag={}
 
 Field={}
 Next={}
@@ -15,7 +16,7 @@ end
 function Field:ClearLine()
     local to=1
     for i=1,40 do
-        local copy=self[i]
+        local copy=false
         for j=1,10 do
             if self[j]==0 then
                 copy=true
@@ -50,7 +51,7 @@ end
 function Field:Collide(block,bi,bj)
     for _=1,#block.data do
         local p=block.data[_]
-        local i,j=17-bi+p[1],bj+p[2]
+        local i,j=20-bi-p[1],bj+p[2]
         if i<1 or j<1 or j>10 or self[i][j]>0 then
             return true
         end
@@ -58,7 +59,15 @@ function Field:Collide(block,bi,bj)
     return false
 end
 
-function Next:Init()
+function Field:Lock(block)
+    for _=1,#block.data do
+        local p=block.data[_]
+        local i,j=20-block.i-p[1],block.j+p[2]
+        self[i][j]=block.type
+    end
+end
+
+function Bag:Init()
     for _=1,7 do self[_]=_ end
     for _=1,6 do
         local __=int((8-_)*rand())+_
@@ -67,7 +76,7 @@ function Next:Init()
     self[8]=1
 end
 
-function Next:Pop()
+function Bag:Pop()
     local v=self[self[8]]
     if self[8]<7 then
         self[8]=self[8]+1
@@ -75,6 +84,30 @@ function Next:Pop()
         self:Init()
     end
     return v
+end
+
+function Next:Init()
+    Bag:Init()
+    for i=1,6 do
+        Next[i]=Bag:Pop()
+    end
+end
+
+function Next:Shift()
+    local b=table.remove(self,1)
+    self[6]=Bag:Pop()
+    return b
+end
+
+function Next:Draw()
+    local x0,y0=100,420-380
+    for i=1,6 do
+        local b=blockdata[Next[i]][1]
+        for j=1,#b do
+            local p=b[j]
+            rect("fill",x0+220+5*p[2],y0+i*20+5*p[1],5,5)
+        end
+    end
 end
 
 function Block:Load(type)
