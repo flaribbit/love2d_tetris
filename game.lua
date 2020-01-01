@@ -10,7 +10,25 @@ function Field:Init()
 end
 
 function Field:ClearLine()
-    
+    local new,_={
+        Init=self.Init,
+        ClearLine=self.ClearLine
+    },1
+    for i=1,40 do
+        local line,copy=self[i],false
+        for j=1,10 do
+            if self[j]==0 then
+                copy=true
+                break
+            end
+        end
+        if copy then
+            new[_],_=line,_+1
+        end
+    end
+    for i=#new+1,40 do
+        new[i]={0,0,0,0,0,0,0,0,0,0}
+    end
 end
 
 function Bag:New()
