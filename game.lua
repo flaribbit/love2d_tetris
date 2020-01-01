@@ -1,21 +1,20 @@
 local int,rand=math.floor,math.random
+local rect=love.graphics.rectangle
+
+local blockdata=require "blockdata"
 
 Field={}
 Next={}
-
-Bag={}
+Block={}
 
 function Field:Init()
     for _=1,40 do self[_]={0,0,0,0,0,0,0,0,0,0} end
 end
 
 function Field:ClearLine()
-    local new,_={
-        Init=self.Init,
-        ClearLine=self.ClearLine
-    },1
+    local to=1
     for i=1,40 do
-        local line,copy=self[i],false
+        local copy=self[i]
         for j=1,10 do
             if self[j]==0 then
                 copy=true
@@ -23,15 +22,30 @@ function Field:ClearLine()
             end
         end
         if copy then
-            new[_],_=line,_+1
+            to=to+1
+        else
+            self[to]=self[i]
         end
     end
-    for i=#new+1,40 do
-        new[i]={0,0,0,0,0,0,0,0,0,0}
+    for i=to,40 do
+        self[i]={0,0,0,0,0,0,0,0,0,0}
     end
 end
 
-function Bag:New()
+function Field:Draw()
+    local x0,y0=100,420
+    rect("line",x0,y0-380,200,400)
+    for i=1,20 do
+        local line=self[i]
+        for j=1,10 do
+            if line[j]>0 then
+                rect("fill",x0+(j-1)*20,y0-(i-1)*20,20,20)
+            end
+        end
+    end
+end
+
+function Next:Init()
     for _=1,7 do self[_]=_ end
     for _=1,6 do
         local __=int((8-_)*rand())+_
@@ -40,20 +54,45 @@ function Bag:New()
     self[8]=1
 end
 
-function Bag:Pop()
+function Next:Pop()
     local v=self[self[8]]
     if self[8]<7 then
         self[8]=self[8]+1
     else
-        Bag:New()
+        self:Init()
     end
     return v
 end
 
-function Next:Init()
-    Bag:New()
+function Block:Load(type)
+    local block=blockdata[type]
+    self.data={}
+    self.type=type
+    self.center=block[2]
+    for i=1,4 do
+        local p=block[1][i]
+        self.data[i]={p[1],p[2]}
+    end
 end
 
-function Next:Shift()
+function Block:RotateL()
+    local o=self.center
+    for i=1,#self.data do
+        local p=self.data[i]
+        p[1]=p[1]-(p[2]-o[2])
+        p[2]=p[2]+(p[1]-o[1])
+    end
+end
 
+function Block:RotateR()
+    local o=self.center
+    for i=1,#self.data do
+        local p=self.data[i]
+        p[1]=p[1]+(p[2]-o[2])
+        p[2]=p[2]-(p[1]-o[1])
+    end
+end
+
+function GameNext()
+    Block:Load(Next:Pop())
 end

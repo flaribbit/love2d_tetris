@@ -6,10 +6,9 @@ Control={
         down="s",
         left="a",
         right="d",
-        jump="j",
-        attack="k",
-        dash="l",
-        boost="u"
+        rotl="j",
+        rotr="k",
+        load="l"
     }
 }
 
