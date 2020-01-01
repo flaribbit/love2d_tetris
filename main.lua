@@ -4,6 +4,7 @@ require "control"
 function love.load()
     Field:Init()
     Next:Init()
+    Block:Load(Next:Pop())
     for i=1,40 do
         for j=1,10 do
             Field[i][j]=(i+j)%2
@@ -28,4 +29,5 @@ end
 function love.draw(dt)
     love.graphics.print("hello",0,0)
     Field:Draw()
+    Block:Draw()
 end

@@ -1,5 +1,6 @@
 local int,rand=math.floor,math.random
 local rect=love.graphics.rectangle
+local color=love.graphics.setColor
 
 local blockdata=require "blockdata"
 
@@ -34,6 +35,7 @@ end
 
 function Field:Draw()
     local x0,y0=100,420
+    color(1,1,1)
     rect("line",x0,y0-380,200,400)
     for i=1,20 do
         local line=self[i]
@@ -69,6 +71,8 @@ function Block:Load(type)
     self.data={}
     self.type=type
     self.center=block[2]
+    self.i=1
+    self.j=3
     for i=1,4 do
         local p=block[1][i]
         self.data[i]={p[1],p[2]}
@@ -79,8 +83,7 @@ function Block:RotateL()
     local o=self.center
     for i=1,#self.data do
         local p=self.data[i]
-        p[1]=p[1]-(p[2]-o[2])
-        p[2]=p[2]+(p[1]-o[1])
+        p[1],p[2]=o[1]-(p[2]-o[2]),o[2]+(p[1]-o[1])
     end
 end
 
@@ -88,8 +91,16 @@ function Block:RotateR()
     local o=self.center
     for i=1,#self.data do
         local p=self.data[i]
-        p[1]=p[1]+(p[2]-o[2])
-        p[2]=p[2]-(p[1]-o[1])
+        p[1],p[2]=o[1]+(p[2]-o[2]),o[2]-(p[1]-o[1])
+    end
+end
+
+function Block:Draw()
+    local x0,y0=100,420-380
+    color(1,0,0)
+    for i=1,#self.data do
+        local p=self.data[i]
+        rect("fill",x0+(p[2]-1)*20,y0+(p[1]-1)*20,20,20)
     end
 end
 
