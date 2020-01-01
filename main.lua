@@ -1,3 +1,4 @@
+require "game"
 require "control"
 
 function love.load()
