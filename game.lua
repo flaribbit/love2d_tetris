@@ -16,17 +16,11 @@ end
 function Field:ClearLine()
     local to=1
     for i=1,40 do
-        local copy=false
         for j=1,10 do
-            if self[j]==0 then
-                copy=true
+            if self[i][j]==0 then
+                self[to],to=self[i],to+1
                 break
             end
-        end
-        if copy then
-            to=to+1
-        else
-            self[to]=self[i]
         end
     end
     for i=to,40 do
@@ -51,7 +45,7 @@ end
 function Field:Collide(block,bi,bj)
     for _=1,#block.data do
         local p=block.data[_]
-        local i,j=20-bi-p[1],bj+p[2]
+        local i,j=22-bi-p[1],bj+p[2]
         if i<1 or j<1 or j>10 or self[i][j]>0 then
             return true
         end
@@ -59,10 +53,21 @@ function Field:Collide(block,bi,bj)
     return false
 end
 
+function Field:Check(block,bi,bj)
+    for _=1,#block.data do
+        local p=block.data[_]
+        local i,j=22-bi-p[1],bj+p[2]
+        if i<1 or j<1 or j>10 or self[i][j]>0 then
+            return false
+        end
+    end
+    return true
+end
+
 function Field:Lock(block)
     for _=1,#block.data do
         local p=block.data[_]
-        local i,j=20-block.i-p[1],block.j+p[2]
+        local i,j=22-block.i-p[1],block.j+p[2]
         self[i][j]=block.type
     end
 end
@@ -105,7 +110,7 @@ function Next:Draw()
         local b=blockdata[Next[i]][1]
         for j=1,#b do
             local p=b[j]
-            rect("fill",x0+220+5*p[2],y0+i*20+5*p[1],5,5)
+            rect("fill",x0+220+12*p[2],y0+(i-1)*40+12*p[1],12,12)
         end
     end
 end

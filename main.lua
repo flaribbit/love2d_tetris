@@ -10,21 +10,27 @@ end
 function love.update(dt)
     Control:Update()
     if Control:IsPress("left") then
-        Block.j=Block.j-1
+        if Field:Check(Block,Block.i,Block.j-1) then
+            Block.j=Block.j-1
+        end
     end
     if Control:IsPress("right") then
-        Block.j=Block.j+1
+        if Field:Check(Block,Block.i,Block.j+1) then
+            Block.j=Block.j+1
+        end
     end
     if Control:IsPress("up") then
-        repeat
+        while Field:Check(Block,Block.i+1,Block.j) do
             Block.i=Block.i+1
-        until Field:Collide(Block,Block.i,Block.j)
-        Block.i=Block.i-1
+        end
         Field:Lock(Block)
+        Field:ClearLine()
         Block:Load(Next:Shift())
     end
     if Control:IsPress("down") then
-        Block.i=Block.i+1
+        if Field:Check(Block,Block.i+1,Block.j) then
+            Block.i=Block.i+1
+        end
     end
     if Control:IsPress("rotl") then
         Block:RotateL()
