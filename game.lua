@@ -6,6 +6,10 @@ local blockdata=require "blockdata"
 local wallkick=require "wallkick"
 local colordata=require "colordata"
 local Bag={}
+local Gval=30
+local Gtimer=0
+local LockDelay=30
+local LockTimer=0
 
 Field={}
 Next={}
@@ -132,6 +136,7 @@ function Block:Load(type)
     self.center=block[2]
     self.i=0
     self.j=3
+    Gtimer=0
     for i=1,4 do
         local p=block[1][i]
         self.data[i]={p[1],p[2]}
@@ -176,6 +181,63 @@ function Block:RotateR()
             self.dir=self.dir+1
             if self.dir==5 then self.dir=1 end
             break
+        end
+    end
+end
+
+function GameUpdate()
+    if Control:IsPress("left") then
+        if Field:Check(Block.data,Block.i,Block.j-1) then
+            Block.j=Block.j-1
+        end
+    end
+    if Control:IsPress("right") then
+        if Field:Check(Block.data,Block.i,Block.j+1) then
+            Block.j=Block.j+1
+        end
+    end
+    if Control:IsPress("up") then
+        while Field:Check(Block.data,Block.i+1,Block.j) do
+            Block.i=Block.i+1
+        end
+        Field:Lock(Block)
+    end
+    if Control:IsPress("down") then
+        if Field:Check(Block.data,Block.i+1,Block.j) then
+            Block.i=Block.i+1
+        end
+    end
+    if Control:IsPress("rotl") then
+        Block:RotateL()
+    end
+    if Control:IsPress("rotr") then
+        Block:RotateR()
+    end
+    if Control:IsPress("hold") and Block.canhold then
+        local hold=Next[0]
+        Block.canhold=false
+        Next[0]=Block.type
+        if hold>0 then
+            Block:Load(hold)
+        else
+            Block:Load(Next:Shift())
+        end
+    end
+    if Control:IsPress("load") then
+        print("["..os.date("%Y-%m-%d %H:%M:%S").."] Loaded")
+        dofile("test.lua")
+    end
+    Gtimer=Gtimer+1
+    if Field:Check(Block.data,Block.i+1,Block.j) then
+        LockTimer=0
+        if Gtimer>=Gval then
+            Block.i=Block.i+1
+            Gtimer=0
+        end
+    else
+        LockTimer=LockTimer+1
+        if LockTimer>=LockDelay then
+            Field:Lock(Block)
         end
     end
 end
