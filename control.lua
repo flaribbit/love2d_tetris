@@ -28,8 +28,8 @@ function Control:Update()
     for k,v in pairs(self.settings) do
         self.okey[k],key[k]=key[k],p(v)
     end
-    if key.left or key.right then
-        if self.okey.left or self.okey.right then
+    if key.left or key.right or key.down then
+        if self.okey.left or self.okey.right or self.okey.down then
             self.timer=self.timer+1
             if self.timer==self.ARR then
                 self.timer=0
@@ -51,5 +51,5 @@ function Control:Draw()
 end
 
 function Control:IsPress(k)
-    return self.key[k] and (not self.okey[k] or (k=="left" or k=="right") and self.timer==0)
+    return self.key[k] and (not self.okey[k] or (k=="left" or k=="right" or k=="down") and self.timer==0)
 end

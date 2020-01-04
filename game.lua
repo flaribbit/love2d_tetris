@@ -4,6 +4,7 @@ local color=love.graphics.setColor
 
 local blockdata=require "blockdata"
 local wallkick=require "wallkick"
+local colordata=require "colordata"
 local Bag={}
 
 Field={}
@@ -38,6 +39,7 @@ function Field:Draw()
         local line=self[i]
         for j=1,10 do
             if line[j]>0 then
+                color(colordata[line[j]])
                 rect("fill",x0+(j-1)*20,y0-(i-1)*20,20,20)
             end
         end
@@ -114,6 +116,7 @@ function Next:Draw()
         local b=blockdata[self[0]][1]
         for j=1,#b do
             local p=b[j]
+            color(colordata[self[0]])
             rect("fill",x0-80+12*p[2],y0+12*p[1],12,12)
         end
     end
@@ -121,6 +124,7 @@ function Next:Draw()
         local b=blockdata[self[i]][1]
         for j=1,#b do
             local p=b[j]
+            color(colordata[self[i]])
             rect("fill",x0+220+12*p[2],y0+(i-1)*40+12*p[1],12,12)
         end
     end
@@ -157,7 +161,7 @@ end
 
 function Block:Draw()
     local x0,y0=100,420-380
-    color(1,0,0)
+    color(colordata[self.type])
     for i=1,#self.data do
         local p=self.data[i]
         rect("fill",x0+(self.j+p[2]-1)*20,y0+(self.i+p[1]-2)*20,20,20)
