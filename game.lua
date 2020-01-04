@@ -64,6 +64,11 @@ function Field:Lock(block)
         local i,j=22-block.i-p[1],block.j+p[2]
         self[i][j]=block.type
     end
+    self:ClearLine()
+    Block:Load(Next:Shift())
+    if not self:Check(Block.data,Block.i,Block.j) then
+        self:Init()
+    end
 end
 
 function Bag:Init()
@@ -177,7 +182,17 @@ end
 
 function Block:Draw()
     local x0,y0=100,420-380
-    color(colordata[self.type])
+    local ighost=Block.i
+    local c=colordata[self.type]
+    color(c[1],c[2],c[3],0.5)
+    while Field:Check(Block.data,ighost+1,Block.j) do
+        ighost=ighost+1
+    end
+    for i=1,#self.data do
+        local p=self.data[i]
+        rect("fill",x0+(self.j+p[2]-1)*20,y0+(ighost+p[1]-2)*20,20,20)
+    end
+    color(c)
     for i=1,#self.data do
         local p=self.data[i]
         rect("fill",x0+(self.j+p[2]-1)*20,y0+(self.i+p[1]-2)*20,20,20)

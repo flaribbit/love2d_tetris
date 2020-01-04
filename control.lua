@@ -11,7 +11,7 @@ Control={
         hold="u",
         load="l"
     },
-    DAS=10,
+    DAS=8,
     ARR=1,
     timer=0
 }

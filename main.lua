@@ -25,11 +25,6 @@ function love.update(dt)
             Block.i=Block.i+1
         end
         Field:Lock(Block)
-        Field:ClearLine()
-        Block:Load(Next:Shift())
-        if not Field:Check(Block.data,Block.i,Block.j) then
-            Field:Init()
-        end
     end
     if Control:IsPress("down") then
         if Field:Check(Block.data,Block.i+1,Block.j) then
@@ -59,7 +54,6 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-    love.graphics.print(tostring(Field:Collide(Block,Block.i,Block.j)),0,0)
     Field:Draw()
     Next:Draw()
     Block:Draw()
