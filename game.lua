@@ -46,20 +46,9 @@ function Field:Draw()
     end
 end
 
-function Field:Collide(block,bi,bj)
-    for _=1,#block.data do
-        local p=block.data[_]
-        local i,j=22-bi-p[1],bj+p[2]
-        if i<1 or j<1 or j>10 or self[i][j]>0 then
-            return true
-        end
-    end
-    return false
-end
-
-function Field:Check(block,bi,bj)
-    for _=1,#block.data do
-        local p=block.data[_]
+function Field:Check(data,bi,bj)
+    for _=1,#data do
+        local p=data[_]
         local i,j=22-bi-p[1],bj+p[2]
         if i<1 or j<1 or j>10 or self[i][j]>0 then
             return false
@@ -134,6 +123,7 @@ function Block:Load(type)
     local block=blockdata[type]
     self.data={}
     self.type=type
+    self.dir=1
     self.center=block[2]
     self.i=0
     self.j=3
@@ -145,17 +135,43 @@ end
 
 function Block:RotateL()
     local o=self.center
+    local new={}
+    local kick=wallkick[self.type<7 and 1 or 2][self.dir+4]
     for i=1,#self.data do
         local p=self.data[i]
-        p[1],p[2]=o[1]-(p[2]-o[2]),o[2]+(p[1]-o[1])
+        new[i]={o[1]-(p[2]-o[2]),o[2]+(p[1]-o[1])}
+    end
+    for i=1,5 do
+        local di,dj=kick[i][2],kick[i][1]
+        if Field:Check(new,self.i-di,self.j+dj) then
+            self.i=self.i-di
+            self.j=self.j+dj
+            self.data=new
+            self.dir=self.dir-1
+            if self.dir==0 then self.dir=4 end
+            break
+        end
     end
 end
 
 function Block:RotateR()
     local o=self.center
+    local new={}
+    local kick=wallkick[self.type<7 and 1 or 2][self.dir]
     for i=1,#self.data do
         local p=self.data[i]
-        p[1],p[2]=o[1]+(p[2]-o[2]),o[2]-(p[1]-o[1])
+        new[i]={o[1]+(p[2]-o[2]),o[2]-(p[1]-o[1])}
+    end
+    for i=1,5 do
+        local di,dj=kick[i][2],kick[i][1]
+        if Field:Check(new,self.i-di,self.j+dj) then
+            self.i=self.i-di
+            self.j=self.j+dj
+            self.data=new
+            self.dir=self.dir+1
+            if self.dir==5 then self.dir=1 end
+            break
+        end
     end
 end
 

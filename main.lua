@@ -11,28 +11,28 @@ end
 function love.update(dt)
     Control:Update()
     if Control:IsPress("left") then
-        if Field:Check(Block,Block.i,Block.j-1) then
+        if Field:Check(Block.data,Block.i,Block.j-1) then
             Block.j=Block.j-1
         end
     end
     if Control:IsPress("right") then
-        if Field:Check(Block,Block.i,Block.j+1) then
+        if Field:Check(Block.data,Block.i,Block.j+1) then
             Block.j=Block.j+1
         end
     end
     if Control:IsPress("up") then
-        while Field:Check(Block,Block.i+1,Block.j) do
+        while Field:Check(Block.data,Block.i+1,Block.j) do
             Block.i=Block.i+1
         end
         Field:Lock(Block)
         Field:ClearLine()
         Block:Load(Next:Shift())
-        if not Field:Check(Block,Block.i,Block.j) then
+        if not Field:Check(Block.data,Block.i,Block.j) then
             Field:Init()
         end
     end
     if Control:IsPress("down") then
-        if Field:Check(Block,Block.i+1,Block.j) then
+        if Field:Check(Block.data,Block.i+1,Block.j) then
             Block.i=Block.i+1
         end
     end
