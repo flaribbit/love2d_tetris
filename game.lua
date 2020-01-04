@@ -3,6 +3,7 @@ local rect=love.graphics.rectangle
 local color=love.graphics.setColor
 
 local blockdata=require "blockdata"
+local wallkick=require "wallkick"
 local Bag={}
 
 Field={}
@@ -10,6 +11,7 @@ Next={}
 Block={}
 
 function Field:Init()
+    Block.canhold=true
     for _=1,40 do self[_]={0,0,0,0,0,0,0,0,0,0} end
 end
 
@@ -65,6 +67,7 @@ function Field:Check(block,bi,bj)
 end
 
 function Field:Lock(block)
+    block.canhold=true
     for _=1,#block.data do
         local p=block.data[_]
         local i,j=22-block.i-p[1],block.j+p[2]
@@ -93,8 +96,9 @@ end
 
 function Next:Init()
     Bag:Init()
+    self[0]=0
     for i=1,6 do
-        Next[i]=Bag:Pop()
+        self[i]=Bag:Pop()
     end
 end
 
@@ -106,8 +110,15 @@ end
 
 function Next:Draw()
     local x0,y0=100,420-380
+    if self[0]>0 then
+        local b=blockdata[self[0]][1]
+        for j=1,#b do
+            local p=b[j]
+            rect("fill",x0-80+12*p[2],y0+12*p[1],12,12)
+        end
+    end
     for i=1,6 do
-        local b=blockdata[Next[i]][1]
+        local b=blockdata[self[i]][1]
         for j=1,#b do
             local p=b[j]
             rect("fill",x0+220+12*p[2],y0+(i-1)*40+12*p[1],12,12)
@@ -120,7 +131,7 @@ function Block:Load(type)
     self.data={}
     self.type=type
     self.center=block[2]
-    self.i=1
+    self.i=0
     self.j=3
     for i=1,4 do
         local p=block[1][i]
@@ -151,8 +162,4 @@ function Block:Draw()
         local p=self.data[i]
         rect("fill",x0+(self.j+p[2]-1)*20,y0+(self.i+p[1]-2)*20,20,20)
     end
-end
-
-function GameNext()
-    Block:Load(Next:Pop())
 end

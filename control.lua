@@ -8,8 +8,12 @@ Control={
         right="d",
         rotl="j",
         rotr="k",
+        hold="u",
         load="l"
-    }
+    },
+    DAS=10,
+    ARR=1,
+    timer=0
 }
 
 function Control:Init()
@@ -20,8 +24,19 @@ end
 
 function Control:Update()
     local p=love.keyboard.isDown
+    local key=self.key
     for k,v in pairs(self.settings) do
-        self.okey[k],self.key[k]=self.key[k],p(v)
+        self.okey[k],key[k]=key[k],p(v)
+    end
+    if key.left or key.right then
+        if self.okey.left or self.okey.right then
+            self.timer=self.timer+1
+            if self.timer==self.ARR then
+                self.timer=0
+            end
+        else
+            self.timer=-self.DAS
+        end
     end
 end
 
@@ -36,5 +51,5 @@ function Control:Draw()
 end
 
 function Control:IsPress(k)
-    return self.key[k] and not self.okey[k]
+    return self.key[k] and (not self.okey[k] or (k=="left" or k=="right") and self.timer==0)
 end

@@ -2,6 +2,7 @@ require "game"
 require "control"
 
 function love.load()
+    math.randomseed(os.time())
     Field:Init()
     Next:Init()
     Block:Load(Next:Shift())
@@ -26,6 +27,9 @@ function love.update(dt)
         Field:Lock(Block)
         Field:ClearLine()
         Block:Load(Next:Shift())
+        if not Field:Check(Block,Block.i,Block.j) then
+            Field:Init()
+        end
     end
     if Control:IsPress("down") then
         if Field:Check(Block,Block.i+1,Block.j) then
@@ -37,6 +41,16 @@ function love.update(dt)
     end
     if Control:IsPress("rotr") then
         Block:RotateR()
+    end
+    if Control:IsPress("hold") and Block.canhold then
+        local hold=Next[0]
+        Block.canhold=false
+        Next[0]=Block.type
+        if hold>0 then
+            Block:Load(hold)
+        else
+            Block:Load(Next:Shift())
+        end
     end
     if Control:IsPress("load") then
         print("["..os.date("%Y-%m-%d %H:%M:%S").."] Loaded")
