@@ -76,12 +76,15 @@ function AICopy(ainet)
 end
 
 function AIChange(ainet,num)
-    local a,b=ainet[1],ainet[2]
-    local m,n=#a,#b
-    for u=1,num do
-        for v=1,m do
-            a[int(rand()*m)+1][int(rand()*n)+1]=rand()*2-1
+    for _=1,#ainet do
+        local layer=ainet[_]
+        local a,b=layer[1],layer[2]
+        local m,n=#a,#b
+        for u=1,num do
+            for v=1,m do
+                a[int(rand()*m)+1][int(rand()*n)+1]=rand()*2-1
+            end
+            b[int(rand()*n)+1]=rand()*2-1
         end
-        b[int(rand()*n)+1]=rand()*2-1
     end
 end
