@@ -83,6 +83,13 @@ function LayerUpdate()
     AILayer[2]=LayerCalculate(AINet[1],AILayer[1])
     AILayer[3]=LayerCalculate(AINet[2],AILayer[2])
     AILayer[4]=LayerCalculate(AINet[3],AILayer[3])
+    Control.key.left=AILayer[4][1]>0.5 and true or false
+    Control.key.right=AILayer[4][2]>0.5 and true or false
+    Control.key.up  =AILayer[4][3]>0.5 and true or false
+    Control.key.down=AILayer[4][4]>0.5 and true or false
+    Control.key.rotl=AILayer[4][5]>0.5 and true or false
+    Control.key.rotr=AILayer[4][6]>0.5 and true or false
+    Control.key.hold=AILayer[4][7]>0.5 and true or false
 end
 
 function LayerDraw()
@@ -149,7 +156,7 @@ function LayerDraw()
             if w>1 then w=1 end
             setColor(0,w,0)
         end
-        circle("fill",p[i][1],p[i][2],5,6)
+        circle("fill",p[i][1],p[i][2],6,6)
     end
     p=Layerpos[3]
     for i=1,#p do
@@ -161,7 +168,7 @@ function LayerDraw()
             if w>1 then w=1 end
             setColor(0,w,0)
         end
-        circle("fill",p[i][1],p[i][2],5,6)
+        circle("fill",p[i][1],p[i][2],6,6)
     end
     p=Layerpos[4]
     for i=1,#p do
@@ -173,6 +180,6 @@ function LayerDraw()
             if w>1 then w=1 end
             setColor(0,w,0)
         end
-        circle("fill",p[i][1],p[i][2],5,6)
+        circle("fill",p[i][1],p[i][2],6,6)
     end
 end

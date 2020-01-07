@@ -26,7 +26,8 @@ function Control:Update()
     local p=love.keyboard.isDown
     local key=self.key
     for k,v in pairs(self.settings) do
-        self.okey[k],key[k]=key[k],p(v)
+        -- self.okey[k],key[k]=key[k],p(v)
+        self.okey[k],key[k]=key[k],key[k]
     end
     if key.left or key.right or key.down then
         if self.okey.left or self.okey.right or self.okey.down then
