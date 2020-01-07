@@ -3,7 +3,7 @@ require "layer"
 require "control"
 require "ga"
 
-function love.load()
+function love.load2()
     math.randomseed(os.time())
     Field:Init()
     Next:Init()
@@ -17,6 +17,23 @@ function love.load()
     LayerDrawInit()
 end
 
+function love.load()
+    math.randomseed(os.time())
+    -- Field:Init()
+    -- Next:Init()
+    -- Block:Load(Next:Shift())
+    InitGroup()
+    for i=1,100 do
+        AIGroup[i].score=AIEvaluate(AIGroup[i].net)
+        print(string.format("[%3d] score=%d",i,AIGroup[i].score))
+    end
+    AISort(AIGroup)
+    print(AIGroup[1].score)
+    for i=50,100 do
+
+    end
+end
+
 function love.update(dt)
     Control:Update()
     GameUpdate()
@@ -28,9 +45,9 @@ function TestDraw()
 end
 
 function love.draw(dt)
-    Field:Draw()
-    Next:Draw()
-    Block:Draw()
-    LayerDraw()
-    TestDraw()
+    -- Field:Draw()
+    -- Next:Draw()
+    -- Block:Draw()
+    -- LayerDraw()
+    -- TestDraw()
 end

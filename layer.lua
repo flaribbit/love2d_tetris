@@ -78,11 +78,11 @@ local function InRect(x0,y0,x,y,w,h)
     return x0>x and y0>y and x0<x+w and y0<y+h
 end
 
-function LayerDump(path)
+function LayerDump(ainet,path)
     local file=io.open(path,"w")
     file:write("{\n")
-    for l=1,#AINet do
-        local layer=AINet[l]
+    for l=1,#ainet do
+        local layer=ainet[l]
         local a,b=layer[1],layer[2]
         file:write(" {\n")
         file:write("  {\n")
