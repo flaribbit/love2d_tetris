@@ -78,6 +78,32 @@ local function InRect(x0,y0,x,y,w,h)
     return x0>x and y0>y and x0<x+w and y0<y+h
 end
 
+function LayerDump(path)
+    local file=io.open(path,"w")
+    file:write("{\n")
+    for l=1,#AINet do
+        local layer=AINet[l]
+        local a,b=layer[1],layer[2]
+        file:write(" {\n")
+        file:write("  {\n")
+        for i=1,#a do
+            file:write("   {")
+            for j=1,#b do
+                file:write(string.format("%6.3f,",a[i][j]))
+            end
+            file:write("},\n")
+        end
+        file:write("  {")
+        for j=1,#b do
+            file:write(string.format("%6.3f,",b[j]))
+        end
+        file:write("},\n")
+        file:write(" },\n")
+    end
+    file:write("}\n")
+    file:close()
+end
+
 function LayerUpdate()
     AILayer[1]=GetInput()
     AILayer[2]=LayerCalculate(AINet[1],AILayer[1])
@@ -104,10 +130,10 @@ function LayerDraw()
             local w=AINet[1][1][i][j]
             if w<0 then
                 if w<-1 then w=-1 end
-                setColor(-w,0,0)
+                setColor(1,0,0,-w)
             else
                 if w>1 then w=1 end
-                setColor(0,w,0)
+                setColor(0,1,0,w)
             end
             line(Layerpos[1][i][1],Layerpos[1][i][2],p[j][1],p[j][2])
         end
@@ -120,10 +146,10 @@ function LayerDraw()
             local w=AINet[2][1][i][j]
             if w<0 then
                 if w<-1 then w=-1 end
-                setColor(-w,0,0)
+                setColor(1,0,0,-w)
             else
                 if w>1 then w=1 end
-                setColor(0,w,0)
+                setColor(0,1,0,w)
             end
             line(Layerpos[2][i][1],Layerpos[2][i][2],p[j][1],p[j][2])
         end
@@ -136,10 +162,10 @@ function LayerDraw()
             local w=AINet[2][1][i][j]
             if w<0 then
                 if w<-1 then w=-1 end
-                setColor(-w,0,0)
+                setColor(1,0,0,-w)
             else
                 if w>1 then w=1 end
-                setColor(0,w,0)
+                setColor(0,1,0,w)
             end
             line(Layerpos[3][i][1],Layerpos[3][i][2],p[j][1],p[j][2])
         end

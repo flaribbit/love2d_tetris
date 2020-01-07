@@ -1,6 +1,7 @@
 require "game"
 require "layer"
 require "control"
+require "ga"
 
 function love.load()
     math.randomseed(os.time())

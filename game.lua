@@ -11,6 +11,8 @@ local Gtimer=0
 local LockDelay=30
 local LockTimer=0
 
+Score=0
+
 Field={}
 Next={}
 Block={}
@@ -33,6 +35,7 @@ function Field:ClearLine()
     for i=to,40 do
         self[i]={0,0,0,0,0,0,0,0,0,0}
     end
+    Score=Score+(41-to)*100
 end
 
 function Field:Draw()
@@ -72,7 +75,9 @@ function Field:Lock(block)
     Block:Load(Next:Shift())
     if not self:Check(Block.data,Block.i,Block.j) then
         self:Init()
+        Timer=3600
     end
+    Score=Score+1
 end
 
 function Bag:Init()
