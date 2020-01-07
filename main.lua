@@ -18,6 +18,7 @@ function love.load2()
 end
 
 function love.load()
+    local rand,int=math.random,math.floor
     math.randomseed(os.time())
     -- Field:Init()
     -- Next:Init()
@@ -29,8 +30,10 @@ function love.load()
     end
     AISort(AIGroup)
     print(AIGroup[1].score)
-    for i=50,100 do
-
+    for i=51,100 do
+        AIGroup[i].net=AICopy(AIGroup[int(rand()*50)+1].net)
+        AIChange(AIGroup[i].net,4)
+        AIGroup[i].score=0
     end
 end
 

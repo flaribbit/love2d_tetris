@@ -2,6 +2,8 @@ require "game"
 require "layer"
 require "control"
 
+local rand,int=math.random,math.floor
+
 Timer=0
 AILayer={}
 AIGroup={}
@@ -41,4 +43,45 @@ function AISort(t)
     table.sort(t,function(a,b)
         return a.score>b.score
     end)
+end
+
+function AICross()
+
+end
+
+function LayerCopy(layer)
+    local a,b=layer[1],layer[2]
+    local m,n=#a,#b
+    local newa,newb={},{}
+    for i=1,m do
+        local row=a[i]
+        local t={}
+        for j=1,n do
+            t[j]=row[j]
+        end
+        newa[i]=t
+    end
+    for j=1,n do
+        newb[j]=b[j]
+    end
+    return {newa,newb}
+end
+
+function AICopy(ainet)
+    local new={}
+    for i=1,#ainet do
+        new[i]=LayerCopy(ainet[i])
+    end
+    return new
+end
+
+function AIChange(ainet,num)
+    local a,b=ainet[1],ainet[2]
+    local m,n=#a,#b
+    for u=1,num do
+        for v=1,m do
+            a[int(rand()*m)+1][int(rand()*n)+1]=rand()*2-1
+        end
+        b[int(rand()*n)+1]=rand()*2-1
+    end
 end
